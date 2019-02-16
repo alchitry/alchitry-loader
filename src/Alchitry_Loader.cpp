@@ -487,9 +487,9 @@ int main(int argc, char *argv[]) {
 				printUsage();
 				return 1;
 			}
-			if (argv[i + 1] == "au") {
+			if (strcmp(argv[i + 1], "au") == 0) {
 				isAu = true;
-			} else if (argv[i + 1] == "cu") {
+			} else if (strcmp(argv[i + 1], "cu") == 0) {
 				isAu = false;
 			} else {
 				cerr << "Invalid board type: " << argv[i + 1] << endl;
