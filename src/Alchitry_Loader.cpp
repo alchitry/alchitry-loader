@@ -549,10 +549,13 @@ int main(int argc, char *argv[]) {
 			}
 			Loader loader(&jtag);
 
-			if (erase)
+			if (erase) {
 				if (!loader.eraseFlash(auBridgeBin)) {
 					cerr << "Failed to erase flash!" << endl;
+				} else {
+					cout << "Done." << endl;
 				}
+			}
 
 			if (fpgaFlash) {
 				if (!loader.writeBin(fpgaBinFlash, true, auBridgeBin)) {
@@ -581,6 +584,8 @@ int main(int argc, char *argv[]) {
 			if (erase) {
 				if (!spi.eraseFlash()) {
 					cerr << "Failed to erase flash!" << endl;
+				} else {
+					cout << "Done." << endl;
 				}
 			}
 

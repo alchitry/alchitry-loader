@@ -798,12 +798,12 @@ void Spi::flash_disable_protection() {
 }
 
 bool Spi::eraseFlash() {
-	fprintf(stderr, "reset..\n");
+	fprintf(stdout, "reset..\n");
 
 	flash_chip_deselect();
 	std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
-	fprintf(stderr, "cdone: %s\n", get_cdone() ? "high" : "low");
+	fprintf(stdout, "cdone: %s\n", get_cdone() ? "high" : "low");
 
 	flash_reset();
 	flash_power_up();
@@ -823,7 +823,7 @@ bool Spi::eraseFlash() {
 	set_gpio(1, 1);
 	std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
-	fprintf(stderr, "cdone: %s\n", get_cdone() ? "high" : "low");
+	fprintf(stdout, "cdone: %s\n", get_cdone() ? "high" : "low");
 
 	return true;
 }
