@@ -217,6 +217,16 @@ string descriptionToName(string des) {
 	}
 }
 
+int desciptionToType(string des) {
+	if (des == "Alchitry Cu A") {
+		return BOARD_CU;
+	} else if (des == "Alchitry Au A") {
+		return BOARD_AU;
+	} else {
+		return BOARD_UNKNOWN;
+	}
+}
+
 void printDeviceList() {
 	FT_STATUS ftStatus;
 	FT_DEVICE_LIST_INFO_NODE *devInfo;
@@ -288,6 +298,45 @@ int getDeviceType(unsigned int devNumber) {
 	return board;
 }
 
+int getFirstDeviceOfType(int board) {
+	FT_STATUS ftStatus;
+	FT_DEVICE_LIST_INFO_NODE *devInfo;
+	DWORD numDevs = 0;
+
+	// create the device information list
+	ftStatus = FT_CreateDeviceInfoList(&numDevs);
+	if (ftStatus != FT_OK) {
+		cerr << "Could not read device list!" << endl;
+		return -1;
+	}
+
+	if (numDevs < 1) {
+		cerr << "No devices found!" << endl;
+		return -1;
+	}
+
+	// allocate storage for list based on numDevs
+	devInfo = (FT_DEVICE_LIST_INFO_NODE*) malloc(
+			sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs);
+	// get the device information list
+	ftStatus = FT_GetDeviceInfoList(devInfo, &numDevs);
+
+	if (ftStatus == FT_OK) {
+		for (int devNumber = 0; devNumber < numDevs; devNumber++) {
+			string boardDescription = devInfo[devNumber].Description;
+			int type = desciptionToType(boardDescription);
+			if (type == board) {
+				free(devInfo);
+				return devNumber;
+			}
+		}
+	} else {
+		cerr << "Error getting device list!" << endl;
+	}
+	free(devInfo);
+	return -1;
+}
+
 bool readAndSaveFTDI(string file) {
 	FT_HANDLE ftHandle;
 
@@ -343,6 +392,7 @@ void printUsage() {
 	cout << "  -u config.data : write FTDI eeprom" << endl;
 	cout << "  -b n : select board \"n\" (defaults to 0)" << endl;
 	cout << "  -p loader.bin : Au bridge bin" << endl;
+	cout << "  -t TYPE : TYPE can be au or cu (defaults to au)" << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -360,9 +410,10 @@ int main(int argc, char *argv[]) {
 	bool erase = false;
 	bool list = false;
 	bool print = false;
-	int deviceNumber = 0;
+	int deviceNumber = -1;
 	bool bridgeProvided = false;
 	string auBridgeBin;
+	bool isAu = true;
 
 	for (int i = 1; i < argc;) {
 		string arg = argv[i];
@@ -430,6 +481,23 @@ int main(int argc, char *argv[]) {
 			bridgeProvided = true;
 			auBridgeBin = argv[i + 1];
 			i += 2;
+		} else if (arg == "-t") {
+			if (argc <= i + 1) {
+				cerr << "Missing board type!" << endl;
+				printUsage();
+				return 1;
+			}
+			if (argv[i + 1] == "au") {
+				isAu = true;
+			} else if (argv[i + 1] == "cu") {
+				isAu = false;
+			} else {
+				cerr << "Invalid board type: " << argv[i + 1] << endl;
+				printUsage();
+				return 1;
+			}
+			i += 2;
+
 		} else {
 			cerr << "Unknown argument " << arg << endl;
 			printUsage();
@@ -443,11 +511,25 @@ int main(int argc, char *argv[]) {
 	if (list)
 		printDeviceList();
 
+	if (deviceNumber < 0)
+		deviceNumber = getFirstDeviceOfType(isAu ? BOARD_AU : BOARD_CU);
+
+	if (deviceNumber < 0) {
+		cerr << "Couldn't find device!" << endl;
+		return 2;
+	}
+
 	if (eeprom)
 		programDevice(deviceNumber, eepromConfig);
 
 	if (erase || fpgaFlash || fpgaRam) {
 		int boardType = getDeviceType(deviceNumber);
+		if ((isAu && boardType != BOARD_AU)
+				|| (!isAu && boardType != BOARD_CU)) {
+			cerr << "Invalid board type detected!" << endl;
+			return 2;
+		}
+
 		if (boardType == BOARD_AU) {
 			if (bridgeProvided == false && (erase || fpgaFlash)) {
 				cerr << "No Au bridge bin provided!" << endl;
