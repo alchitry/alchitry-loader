@@ -904,7 +904,7 @@ bool Spi::writeBin(string filename) {
 		flash_wait();
 	}
 
-	cout << "Programming..." << endl;
+	cout << "Programming... ";
 
 	for (int rc, addr = 0; true; addr += rc) {
 		uint8_t buffer[256];
@@ -915,10 +915,9 @@ bool Spi::writeBin(string filename) {
 		flash_write_enable();
 		flash_prog(rw_offset + addr, buffer, rc);
 		flash_wait();
-		float p = (float) addr / file_size * 100.0f;
-		cout << '\r' << fixed << std::setprecision(0) << p << "%";
 	}
-	cout << '\r' << fixed << std::setprecision(0) << 100.0f << "%" << endl;
+
+	cout << "Done." << endl;
 
 	/* seek to the beginning for second pass */
 	fseek(f, 0, SEEK_SET);

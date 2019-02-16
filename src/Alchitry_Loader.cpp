@@ -519,6 +519,9 @@ int main(int argc, char *argv[]) {
 		return 2;
 	}
 
+	cout << "Found " << (isAu ? "Au" : "Cu") << " as device " << deviceNumber
+			<< "." << endl;
+
 	if (eeprom)
 		programDevice(deviceNumber, eepromConfig);
 
