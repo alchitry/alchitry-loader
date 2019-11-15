@@ -3,3 +3,5 @@
 .settings/
 V*/
 Release/
+build/
+.DS_Store
