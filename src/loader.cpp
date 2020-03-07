@@ -382,7 +382,7 @@ string Loader::reverseBytes(string start) {
 	string out = ss.str();
 	if (out.length() - 1 == start.length())
 		out = out.substr(1, out.length() - 1);
-	delete bytes;
+	delete [] bytes;
 	return out;
 }
 

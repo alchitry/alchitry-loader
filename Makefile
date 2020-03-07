@@ -7,6 +7,9 @@ EXEC ?= alchitry-loader
 # sure that the variable PREFIX is defined, e.g. make PREFIX=/usr/local
 PREFIX = /usr/local
 
+# Build a version string
+GIT_VERSION := "$(shell git describe --abbrev=4 --dirty --always --tags)"
+
 LFLAGS = -lpthread
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -33,7 +36,7 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CXX = g++
-CXXFLAGS += $(INC_FLAGS) -MMD -MP
+CXXFLAGS += $(INC_FLAGS) -DVERSION=\"$(GIT_VERSION)\" -MMD -MP -std=c++11
 LFLAGS += $(S_LIBS)
 
 # ==== Build Types ============================================================
@@ -86,6 +89,9 @@ ifndef PREFIX
 	$(error PREFIX is not set)
 endif
 	$(call uninstall_tool,$(EXEC))
+ifeq ($(UNAME), Linux)
+	rm -Rf etc/udev/rules.d/99-alchitry.rules
+endif
 
 # ==== Cleanup ================================================================
 

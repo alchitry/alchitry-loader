@@ -22,6 +22,10 @@
 #include <cstring>
 #include "config_type.h"
 
+#ifndef VERSION
+#define VERSION "1.0.0"
+#endif
+
 #define BOARD_ERROR -2
 #define BOARD_UNKNOWN -1
 #define BOARD_AU 0
@@ -380,6 +384,10 @@ bool readAndSaveFTDI(string file) {
 	return true;
 }
 
+void printVersion() {
+    cout << VERSION << endl;
+}
+
 void printUsage() {
 	cout << "Usage: \"loader arguments\"" << endl;
 	cout << endl;
@@ -393,6 +401,7 @@ void printUsage() {
 	cout << "  -b n : select board \"n\" (defaults to 0)" << endl;
 	cout << "  -p loader.bin : Au bridge bin" << endl;
 	cout << "  -t TYPE : TYPE can be au or cu (defaults to au)" << endl;
+    cout << "  -v|--version : print the program version" << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -498,7 +507,10 @@ int main(int argc, char *argv[]) {
 			}
 			i += 2;
 
-		} else {
+		} else if (arg == "-v" | arg=="--version") {
+            printVersion();
+            return 0;
+        } else {
 			cerr << "Unknown argument " << arg << endl;
 			printUsage();
 			return 1;
