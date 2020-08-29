@@ -8,7 +8,8 @@ EXEC ?= alchitry-loader
 PREFIX = /usr/local
 
 # Build a version string
-GIT_VERSION := "$(shell git describe --abbrev=4 --dirty --always --tags)"
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags 2>/dev/null)
+VERSION ?= $(if $(GIT_VERSION),$(GIT_VERSION),"1.0.0")
 
 LFLAGS = -lpthread
 UNAME := $(shell uname)
@@ -36,7 +37,7 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CXX = g++
-CXXFLAGS += $(INC_FLAGS) -DVERSION=\"$(GIT_VERSION)\" -MMD -MP -std=c++11
+CXXFLAGS += $(INC_FLAGS) -DVERSION=\"$(VERSION)\" -MMD -MP -std=c++11
 LFLAGS += $(S_LIBS)
 
 # ==== Build Types ============================================================
