@@ -21,10 +21,8 @@ add_executable(alchitry_loader
         src/spi.h
         src/WinTypes.h)
 
-if (UNIX)
-    target_link_libraries(alchitry_loader ${CMAKE_SOURCE_DIR}/lib/linux/libftd2xx.a pthread)
-endif (UNIX)
 
-if (WIN32)
-    target_link_libraries(alchitry_loader ${CMAKE_SOURCE_DIR}/lib/windows/ftd2xx.lib pthread)
-endif (WIN32)
+target_link_libraries(alchitry_loader
+        ${CMAKE_SOURCE_DIR}/lib/linux/libftd2xx.a
+        ${CMAKE_SOURCE_DIR}/lib/windows/ftd2xx.lib
+        pthread)

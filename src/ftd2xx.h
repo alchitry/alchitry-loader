@@ -1,6 +1,6 @@
 /*++
 
-Copyright © 2001-2011 Future Technology Devices International Limited
+Copyright © 2001-2021 Future Technology Devices International Limited
 
 THIS SOFTWARE IS PROVIDED BY FUTURE TECHNOLOGY DEVICES INTERNATIONAL LIMITED "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -27,7 +27,7 @@ ftd2xx.h
 
 Abstract:
 
-Native USB device driver for FTDI FT232x, FT245x, FT2232x and FT4232x devices
+Native USB device driver for FTDI FT232x, FT245x, FT2232x, FT4232x, FT2233H and FT4233H devices
 FTD2XX library definitions
 
 Environment:
@@ -191,7 +191,7 @@ enum {
 // Events
 //
 
-typedef void (*PFT_EVENT_HANDLER)(DWORD,DWORD);
+typedef void(*PFT_EVENT_HANDLER)(DWORD, DWORD);
 
 #define FT_EVENT_RXCHAR			1
 #define FT_EVENT_MODEM_STATUS	2
@@ -224,7 +224,19 @@ enum {
 	FT_DEVICE_4222H_0,
 	FT_DEVICE_4222H_1_2,
 	FT_DEVICE_4222H_3,
-    FT_DEVICE_4222_PROG,
+	FT_DEVICE_4222_PROG,
+	FT_DEVICE_900,
+	FT_DEVICE_930,
+	FT_DEVICE_UMFTPD3A,
+	FT_DEVICE_2233HP,
+	FT_DEVICE_4233HP,
+	FT_DEVICE_2232HP,
+	FT_DEVICE_4232HP,
+	FT_DEVICE_233HP,
+	FT_DEVICE_232HP,
+	FT_DEVICE_2232HA,
+	FT_DEVICE_4232HA,
+	FT_DEVICE_232RN,
 };
 
 //
@@ -316,15 +328,15 @@ extern "C" {
 
 
 #ifdef FTD2XX_STATIC
-    FTD2XX_API
-        FT_STATUS WINAPI FT_Initialise(
-        void
-        );
+	FTD2XX_API
+		FT_STATUS WINAPI FT_Initialise(
+		void
+		);
 
-    FTD2XX_API
-        void WINAPI FT_Finalise(
-        void
-        );
+	FTD2XX_API
+		void WINAPI FT_Finalise(
+		void
+		);
 #endif // FTD2XX_STATIC
 
 	FTD2XX_API
@@ -340,7 +352,7 @@ extern "C" {
 		FT_HANDLE *pHandle
 		);
 
-	FTD2XX_API 
+	FTD2XX_API
 		FT_STATUS WINAPI FT_ListDevices(
 		PVOID pArg1,
 		PVOID pArg2,
@@ -360,7 +372,7 @@ extern "C" {
 		LPDWORD lpBytesReturned
 		);
 
-	FTD2XX_API 
+	FTD2XX_API
 		FT_STATUS WINAPI FT_Write(
 		FT_HANDLE ftHandle,
 		LPVOID lpBuffer,
@@ -368,7 +380,7 @@ extern "C" {
 		LPDWORD lpBytesWritten
 		);
 
-	FTD2XX_API 
+	FTD2XX_API
 		FT_STATUS WINAPI FT_IoCtl(
 		FT_HANDLE ftHandle,
 		DWORD dwIoControlCode,
@@ -690,7 +702,7 @@ extern "C" {
 		UCHAR FT1248FlowControlH;	// FT1248 flow control enable
 		UCHAR IsVCPH;				// non-zero if interface is to use VCP drivers
 		UCHAR PowerSaveEnableH;		// non-zero if using ACBUS7 to save power for self-powered designs
-		
+
 	} FT_PROGRAM_DATA, *PFT_PROGRAM_DATA;
 
 	FTD2XX_API
@@ -784,8 +796,8 @@ extern "C" {
 		UCHAR BIsFifoTar;			// non-zero if interface is 245 FIFO CPU target
 		UCHAR BIsFastSer;			// non-zero if interface is Fast serial
 		// Driver option
-		UCHAR ADriverType;			// 
-		UCHAR BDriverType;			// 
+		UCHAR ADriverType;			// non-zero if interface is to use VCP drivers
+		UCHAR BDriverType;			// non-zero if interface is to use VCP drivers
 	} FT_EEPROM_2232, *PFT_EEPROM_2232;
 
 
@@ -811,7 +823,7 @@ extern "C" {
 		UCHAR Cbus3;				// Cbus Mux control
 		UCHAR Cbus4;				// Cbus Mux control
 		// Driver option
-		UCHAR DriverType;			// 
+		UCHAR DriverType;			// non-zero if using D2XX driver
 	} FT_EEPROM_232R, *PFT_EEPROM_232R;
 
 
@@ -841,8 +853,8 @@ extern "C" {
 		UCHAR BIsFastSer;			// non-zero if interface is Fast serial
 		UCHAR PowerSaveEnable;		// non-zero if using BCBUS7 to save power for self-powered designs
 		// Driver option
-		UCHAR ADriverType;			// 
-		UCHAR BDriverType;			// 
+		UCHAR ADriverType;			// non-zero if interface is to use VCP drivers
+		UCHAR BDriverType;			// non-zero if interface is to use VCP drivers
 	} FT_EEPROM_2232H, *PFT_EEPROM_2232H;
 
 
@@ -869,10 +881,10 @@ extern "C" {
 		UCHAR CRIIsTXDEN;			// non-zero if port C uses RI as RS485 TXDEN
 		UCHAR DRIIsTXDEN;			// non-zero if port D uses RI as RS485 TXDEN
 		// Driver option
-		UCHAR ADriverType;			// 
-		UCHAR BDriverType;			// 
-		UCHAR CDriverType;			// 
-		UCHAR DDriverType;			// 
+		UCHAR ADriverType;			// non-zero if interface is to use VCP drivers
+		UCHAR BDriverType;			// non-zero if interface is to use VCP drivers
+		UCHAR CDriverType;			// non-zero if interface is to use VCP drivers
+		UCHAR DDriverType;			// non-zero if interface is to use VCP drivers
 	} FT_EEPROM_4232H, *PFT_EEPROM_4232H;
 
 
@@ -906,10 +918,10 @@ extern "C" {
 		UCHAR IsFifo;				// non-zero if interface is 245 FIFO
 		UCHAR IsFifoTar;			// non-zero if interface is 245 FIFO CPU target
 		UCHAR IsFastSer;			// non-zero if interface is Fast serial
-		UCHAR IsFT1248	;			// non-zero if interface is FT1248
+		UCHAR IsFT1248;			// non-zero if interface is FT1248
 		UCHAR PowerSaveEnable;		// 
 		// Driver option
-		UCHAR DriverType;			// 
+		UCHAR DriverType;			// non-zero if interface is to use VCP drivers
 	} FT_EEPROM_232H, *PFT_EEPROM_232H;
 
 
@@ -957,9 +969,222 @@ extern "C" {
 		UCHAR RS485EchoSuppress;	// 
 		UCHAR PowerSaveEnable;		// 
 		// Driver option
-		UCHAR DriverType;			// 
+		UCHAR DriverType;			// non-zero if interface is to use VCP drivers
 	} FT_EEPROM_X_SERIES, *PFT_EEPROM_X_SERIES;
 
+
+	// FT4222H EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	typedef struct ft_eeprom_4222h {
+		// Common header
+		FT_EEPROM_HEADER common;	// common elements for all device EEPROMs
+		CHAR Revision;				// 'A', 'B', 'C', or 'D'.
+		UCHAR I2C_Slave_Address;
+		// Suspend
+		UCHAR SPISuspend;			// 0 for "Disable SPI, tristate pins", 2 for "Keep SPI pin status", 3 for "Enable SPI pin control"
+		UCHAR SuspendOutPol;		// 0 for negative, 1 for positive (not implemented on Rev A)
+		UCHAR EnableSuspendOut;		// non-zero to enable (not implemented on Rev A)
+		// QSPI
+		UCHAR Clock_SlowSlew;		// non-zero if clock pin has slow slew
+		UCHAR Clock_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR IO0_SlowSlew;			// non-zero if IO0 pin has slow slew
+		UCHAR IO1_SlowSlew;			// non-zero if IO1 pin has slow slew
+		UCHAR IO2_SlowSlew;			// non-zero if IO2 pin has slow slew
+		UCHAR IO3_SlowSlew;			// non-zero if IO3 pin has slow slew
+		UCHAR IO_Drive; 			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR SlaveSelect_PullUp;	// non-zero to enable pull up
+		UCHAR SlaveSelect_PullDown;	// non-zero to enable pull down
+		UCHAR SlaveSelect_Drive;	// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR SlaveSelect_SlowSlew;	// non-zero if slave select pin has slow slew
+		UCHAR MISO_Suspend;			// 2 for push-low, 3 for push high, 0 and 1 reserved
+		UCHAR SIMO_Suspend;			// 2 for push-low, 3 for push high, 0 and 1 reserved
+		UCHAR IO2_IO3_Suspend;		// 2 for push-low, 3 for push high, 0 and 1 reserved
+		UCHAR SlaveSelect_Suspend;	// 0 for no-change (not implemented on Rev A), 2 for push-low, 3 for push high, 1 reserved
+		// GPIO
+		UCHAR GPIO0_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR GPIO1_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR GPIO2_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR GPIO3_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+		UCHAR GPIO0_SlowSlew;		// non-zero if IO0 pin has slow slew
+		UCHAR GPIO1_SlowSlew;		// non-zero if IO0 pin has slow slew
+		UCHAR GPIO2_SlowSlew;		// non-zero if IO0 pin has slow slew
+		UCHAR GPIO3_SlowSlew;		// non-zero if IO0 pin has slow slew
+		UCHAR GPIO0_PullDown;		// non-zero to enable pull down
+		UCHAR GPIO1_PullDown;		// non-zero to enable pull down
+		UCHAR GPIO2_PullDown;		// non-zero to enable pull down
+		UCHAR GPIO3_PullDown;		// non-zero to enable pull down
+		UCHAR GPIO0_PullUp;			// non-zero to enable pull up
+		UCHAR GPIO1_PullUp;			// non-zero to enable pull up
+		UCHAR GPIO2_PullUp;			// non-zero to enable pull up
+		UCHAR GPIO3_PullUp;			// non-zero to enable pull up
+		UCHAR GPIO0_OpenDrain;		// non-zero to enable open drain
+		UCHAR GPIO1_OpenDrain;		// non-zero to enable open drain
+		UCHAR GPIO2_OpenDrain;		// non-zero to enable open drain
+		UCHAR GPIO3_OpenDrain;		// non-zero to enable open drain
+		UCHAR GPIO0_Suspend;		// 0 for no-change, 1 for input (not implemented on Rev A), 2 for push-low, 3 for push high
+		UCHAR GPIO1_Suspend;		// 0 for no-change, 1 for input (not implemented on Rev A), 2 for push-low, 3 for push high
+		UCHAR GPIO2_Suspend;		// 0 for no-change, 1 for input (not implemented on Rev A), 2 for push-low, 3 for push high
+		UCHAR GPIO3_Suspend;		// 0 for no-change, 1 for input (not implemented on Rev A), 2 for push-low, 3 for push high
+		UCHAR FallingEdge;			// non-zero to change GPIO on falling edge
+		// BCD
+		UCHAR BCD_Disable;			// non-zero to disable BCD
+		UCHAR BCD_OutputActiveLow;	// non-zero to set BCD output active low
+		UCHAR BCD_Drive;			// valid values are 4mA, 8mA, 12mA, 16mA
+	} FT_EEPROM_4222H, *PFT_EEPROM_4222H;
+
+
+	// Power Delivery structures for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// PDO Configuration structure, mA supported values 0 to 10230mA, mV supported values 0 to 51100mV
+	// This is part of the FT_EEPROM_PD structure.
+	typedef struct ft_eeprom_PD_PDO_mv_ma {
+		USHORT PDO1ma;	// PDO1 mA
+		USHORT PDO1mv;	// PDO1 mV
+		USHORT PDO2ma;	// PDO2 mA
+		USHORT PDO2mv;	// PDO2 mV
+		USHORT PDO3ma;	// PDO3 mA
+		USHORT PDO3mv;	// PDO3 mV
+		USHORT PDO4ma;	// PDO4 mA
+		USHORT PDO4mv;	// PDO4 mV
+		USHORT PDO5ma;	// PDO5 mA (FTx233HP only)
+		USHORT PDO5mv;	// PDO5 mV (FTx233HP only)
+		USHORT PDO6ma;	// PDO6 mA (FTx233HP only)
+		USHORT PDO6mv;	// PDO6 mV (FTx233HP only)
+		USHORT PDO7ma;	// PDO7 mA (FTx233HP only)
+		USHORT PDO7mv;	// PDO7 mV (FTx233HP only)
+	} FT_EEPROM_PD_PDO_mv_ma;
+
+	// PD EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// This is appended to the end of the base device structure. e_g. 
+	//		struct {
+	//			FT_EEPROM_xxx base;
+	//			FT_EEPROM_PD pd;
+	//		};
+	// Device GPIO values are:
+	//	FTx233HP - 0 to 7, 15 for N/A
+	//	FTx232HP - 0 to 3, 15 for N/A
+	typedef struct ft_eeprom_pd {
+		// Configuration
+		UCHAR srprs;		// non-zero to enable Sink Request Power Role Swap
+		UCHAR sraprs;		// non-zero to enable Sink Accept PR Swap
+		UCHAR srrprs;		// non-zero to enable Source Request PR SWAP
+		UCHAR saprs;		// non-zero to enable Source Accept PR SWAP
+		UCHAR vconns;		// non-zero to enable vConn Swap
+		UCHAR passthru;		// non-zero to enable Pass Through (FTx233HP only)
+		UCHAR extmcu;		// non-zero to enable External MCU
+		UCHAR pd2en;		// non-zero to enable PD2 (FTx233HP only)
+		UCHAR pd1autoclk;	// non-zero to enable PD1 Auto Clock
+		UCHAR pd2autoclk;	// non-zero to enable PD2 Auto Clock (FTx233HP only)
+		UCHAR useefuse;		// non-zero to Use EFUSE
+		UCHAR extvconn;		// non-zero to enable External vConn
+
+		// GPIO Configuration
+		UCHAR count;		// GPIO Count, supported values are 0 to 7 
+		UCHAR gpio1;		// GPIO Number 1, supports device GPIO values
+		UCHAR gpio2;		// GPIO Number 2, supports device GPIO values
+		UCHAR gpio3;		// GPIO Number 3, supports device GPIO values
+		UCHAR gpio4;		// GPIO Number 4, supports device GPIO values
+		UCHAR gpio5;		// GPIO Number 5, supports device GPIO values (FTx233HP only)
+		UCHAR gpio6;		// GPIO Number 6, supports device GPIO values (FTx233HP only)
+		UCHAR gpio7;		// GPIO Number 7, supports device GPIO values (FTx233HP only)
+		UCHAR pd1lden;		// PD1 Load Enable, supports device GPIO values
+		UCHAR pd2lden;		// PD2 Load Enable, supports device GPIO values (FTx233HP only)
+		UCHAR dispin;		// Discharge Pin, supports device GPIO values
+		UCHAR disenbm;		// Discharge Enable BM, 0 for "Drive Hi", 1 for "Drive Low", 2 for "Input Mode", 3 for "Don't Care"
+		UCHAR disdisbm;		// Discharge Disable BM, 0 for "Drive Hi", 1 for "Drive Low", 2 for "Input Mode", 3 for "Don't Care"
+		UCHAR ccselect;		// CC Select Indicator, supports device GPIO values
+
+		// ISET Configuration
+		UCHAR iset1;		// ISET1, supports device GPIO values
+		UCHAR iset2;		// ISET2, supports device GPIO values
+		UCHAR iset3;		// ISET3, supports device GPIO values
+		UCHAR extiset;		// non-zero to enable EXTEND_ISET
+		UCHAR isetpd2;		// non-zero to enable ISET_PD2
+		UCHAR iseten;		// non-zero to set ISET_ENABLED
+
+		// BM Configuration, 0 for "Drive Hi", 1 for "Drive Low", 2 for "Input Mode", 3 for "Don't Care"
+		UCHAR PDO1_GPIO[7];		// PDO1 GPIO1 to GPIO7
+		UCHAR PDO2_GPIO[7];		// PDO2 GPIO1 to GPIO7
+		UCHAR PDO3_GPIO[7];		// PDO3 GPIO1 to GPIO7
+		UCHAR PDO4_GPIO[7];		// PDO4 GPIO1 to GPIO7
+		UCHAR PDO5_GPIO[7];		// PDO5 GPIO1 to GPIO7 (FTx233HP only)
+		UCHAR PDO6_GPIO[7];		// PDO6 GPIO1 to GPIO7 (FTx233HP only)
+		UCHAR PDO7_GPIO[7];		// PDO7 GPIO1 to GPIO7 (FTx233HP only)
+		UCHAR VSET0V_GPIO[7];	// PDO7 GPIO1 to GPIO7
+		UCHAR VSAFE5V_GPIO[7];	// PDO7 GPIO1 to GPIO7
+
+		FT_EEPROM_PD_PDO_mv_ma BM_PDO_Sink;
+		FT_EEPROM_PD_PDO_mv_ma BM_PDO_Source;
+		FT_EEPROM_PD_PDO_mv_ma BM_PDO_Sink_2; // (FTx233HP only)
+
+		// PD Timers
+		UCHAR srt;			// Sender Response Timer
+		UCHAR hrt;			// Hard Reset Timer
+		UCHAR sct;			// Source Capability Timer
+		UCHAR dit;			// Discover Identity Timer
+		USHORT srcrt;		// Source Recover Timer
+		USHORT trt;			// Transition Timer
+		USHORT sofft;		// Source off timer
+		USHORT nrt;			// No Response Timer
+		USHORT swct;		// Sink Wait Capability Timer
+		USHORT snkrt;		// Sink Request Timer
+		UCHAR dt;			// Discharge Timer
+		UCHAR cnst;			// Chunk not supported timer
+		USHORT it;			// Idle Timer
+
+		// PD Control
+		UCHAR i2caddr;		// I2C Address (hex)
+		UINT prou;			// Power Reserved for OWN use
+		UINT trim1;			// TRIM1
+		UINT trim2;			// TRIM2
+		UCHAR extdc;		// non-zero to enable ETERNAL_DC_POWER
+	} FT_EEPROM_PD, *PFT_EEPROM_PD;
+
+	// FT2233HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT2232H with power delivery
+	typedef struct _ft_eeprom_2233hp
+	{
+		FT_EEPROM_2232H	ft2232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_2233HP, *PFT_EEPROM_2233HP;
+
+	// FT4233HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT4232H with power delivery
+	typedef struct _ft_eeprom_4233hp
+	{
+		FT_EEPROM_4232H	ft4232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_4233HP, *PFT_EEPROM_4233HP;
+
+	// FT2232HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT2232H with power delivery
+	typedef struct _ft_eeprom_2232hp
+	{
+		FT_EEPROM_2232H	ft2232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_2232HP, *PFT_EEPROM_2232HP;
+
+	// FT4232HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT4232H with power delivery
+	typedef struct _ft_eeprom_4232hp
+	{
+		FT_EEPROM_4232H	ft4232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_4232HP, *PFT_EEPROM_4232HP;
+
+	// FT233HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT233H with power delivery
+	typedef struct _ft_eeprom_233hp
+	{
+		FT_EEPROM_232H	ft232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_233HP, *PFT_EEPROM_233HP;
+
+	// FT232HP EEPROM structure for use with FT_EEPROM_Read and FT_EEPROM_Program
+	// FT232H with power delivery
+	typedef struct _ft_eeprom_232hp
+	{
+		FT_EEPROM_232H	ft232h;
+		FT_EEPROM_PD	pd;
+	} FT_EEPROM_232HP, *PFT_EEPROM_232HP;
 
 	FTD2XX_API
 		FT_STATUS WINAPI FT_EEPROM_Read(
@@ -1029,13 +1254,13 @@ extern "C" {
 
 	FTD2XX_API
 		FT_STATUS FT_SetVIDPID(
-		DWORD dwVID, 
+		DWORD dwVID,
 		DWORD dwPID
 		);
-			
+
 	FTD2XX_API
 		FT_STATUS FT_GetVIDPID(
-		DWORD * pdwVID, 
+		DWORD * pdwVID,
 		DWORD * pdwPID
 		);
 
@@ -1159,20 +1384,20 @@ extern "C" {
 	typedef struct _FTDCB {
 		DWORD DCBlength;			/* sizeof(FTDCB)						*/
 		DWORD BaudRate;				/* Baudrate at which running			*/
-		DWORD fBinary: 1;			/* Binary Mode (skip EOF check)			*/
-		DWORD fParity: 1;			/* Enable parity checking				*/
-		DWORD fOutxCtsFlow:1;		/* CTS handshaking on output			*/
-		DWORD fOutxDsrFlow:1;		/* DSR handshaking on output			*/
-		DWORD fDtrControl:2;		/* DTR Flow control						*/
-		DWORD fDsrSensitivity:1;	/* DSR Sensitivity						*/
-		DWORD fTXContinueOnXoff: 1;	/* Continue TX when Xoff sent			*/
-		DWORD fOutX: 1;				/* Enable output X-ON/X-OFF				*/
-		DWORD fInX: 1;				/* Enable input X-ON/X-OFF				*/
-		DWORD fErrorChar: 1;		/* Enable Err Replacement				*/
-		DWORD fNull: 1;				/* Enable Null stripping				*/
-		DWORD fRtsControl:2;		/* Rts Flow control						*/
-		DWORD fAbortOnError:1;		/* Abort all reads and writes on Error	*/
-		DWORD fDummy2:17;			/* Reserved								*/
+		DWORD fBinary : 1;			/* Binary Mode (skip EOF check)			*/
+		DWORD fParity : 1;			/* Enable parity checking				*/
+		DWORD fOutxCtsFlow : 1;		/* CTS handshaking on output			*/
+		DWORD fOutxDsrFlow : 1;		/* DSR handshaking on output			*/
+		DWORD fDtrControl : 2;		/* DTR Flow control						*/
+		DWORD fDsrSensitivity : 1;	/* DSR Sensitivity						*/
+		DWORD fTXContinueOnXoff : 1;	/* Continue TX when Xoff sent			*/
+		DWORD fOutX : 1;				/* Enable output X-ON/X-OFF				*/
+		DWORD fInX : 1;				/* Enable input X-ON/X-OFF				*/
+		DWORD fErrorChar : 1;		/* Enable Err Replacement				*/
+		DWORD fNull : 1;				/* Enable Null stripping				*/
+		DWORD fRtsControl : 2;		/* Rts Flow control						*/
+		DWORD fAbortOnError : 1;		/* Abort all reads and writes on Error	*/
+		DWORD fDummy2 : 17;			/* Reserved								*/
 		WORD wReserved;				/* Not currently used					*/
 		WORD XonLim;				/* Transmit X-ON threshold				*/
 		WORD XoffLim;				/* Transmit X-OFF threshold				*/
@@ -1193,7 +1418,7 @@ extern "C" {
 		DWORD ReadTotalTimeoutConstant;		/* Constant in milliseconds.		*/
 		DWORD WriteTotalTimeoutMultiplier;	/* Multiplier of characters.		*/
 		DWORD WriteTotalTimeoutConstant;	/* Constant in milliseconds.		*/
-	} FTTIMEOUTS,*LPFTTIMEOUTS;
+	} FTTIMEOUTS, *LPFTTIMEOUTS;
 
 
 	FTD2XX_API
@@ -1440,4 +1665,3 @@ extern "C" {
 
 
 #endif	/* FTD2XX_H */
-
