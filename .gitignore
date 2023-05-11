@@ -9,3 +9,6 @@ Release/
 /CMakeCache.txt
 /Makefile
 /CMakeFiles/
+/alchitry_loader.cbp
+/.cmake/
+/Testing/Temporary/LastTest.log
