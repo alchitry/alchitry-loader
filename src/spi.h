@@ -11,6 +11,7 @@
 #include "ftd2xx.h"
 #include <unistd.h>
 #include <string>
+#include <stdint.h>
 
 using namespace std;
 

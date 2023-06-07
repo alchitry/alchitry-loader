@@ -134,6 +134,11 @@ string Loader::shiftDR(int bits, string write) {
 bool Loader::loadBin(string file) {
 	string binStr = fileToBinStr(file);
 
+    if (binStr.empty()) {
+        cerr << "Failed to read bin file: "+ file << endl;
+        return false;
+    }
+
 	string reversedBinStr = reverseBytes(binStr);
 
 	if (!device->setFreq(10000000)) {
