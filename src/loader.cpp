@@ -182,24 +182,6 @@ bool Loader::loadBin(string file) {
 	if (!shiftIR(6, "09", "31", "11"))
 		return false;
 
-	// config/status
-	if (!setState(Jtag_fsm::TEST_LOGIC_RESET))
-		return false;
-	if (!device->sendClocks(5))
-		return false;
-	if (!setIR(CFG_IN))
-		return false;
-	if (!shiftDR(160, "0000000400000004800700140000000466aa9955", "", ""))
-		return false;
-	if (!setIR(CFG_OUT))
-		return false;
-	if (!shiftDR(32, "00000000", "3f5e0d40", "08000000"))
-		return false;
-	if (!setState(Jtag_fsm::TEST_LOGIC_RESET))
-		return false;
-	if (!device->sendClocks(5))
-		return false;
-
 	return true;
 }
 
