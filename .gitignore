@@ -13,3 +13,4 @@ Release/
 /.cmake/
 /Testing/Temporary/LastTest.log
 /alchitry_loader
+/build
