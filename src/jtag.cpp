@@ -313,15 +313,15 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 	bool read = tdo != "";
 	if (read) {
 		if (tdo.length() < reqHex) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return false;
 		}
 		if (mask != "" && mask.length() < reqHex) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return false;
 		}
 	}
@@ -336,9 +336,9 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 		byOutputBuffer[2] = data & 0xff;
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return false;
 		}
 
@@ -349,9 +349,9 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 		byOutputBuffer[2] = 0x03 | (lastBit << 7);
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return false;
 		}
 
@@ -364,9 +364,9 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			ftStatus = FT_Read(ftHandle, byInputBuffer, dwNumBytesToRead,
 					&dwNumBytesRead);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
 				return false;
 			}
 
@@ -399,10 +399,10 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			ftStatus = FT_Write(ftHandle, byOutputBuffer, 3 + bct,
 					&dwNumBytesSent);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
-				delete tdiBytes;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
+				delete[] tdiBytes;
 				return false;
 			}
 
@@ -418,10 +418,10 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			byOutputBuffer[2] = tdiBytes[reqBytes - 1] & 0xff;
 			ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
-				delete tdiBytes;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
+				delete[] tdiBytes;
 				return false;
 			}
 		}
@@ -433,10 +433,10 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 		byOutputBuffer[2] = 0x03 | (lastBit << 7);
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
-			delete tdiBytes;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
+			delete[] tdiBytes;
 			return false;
 		}
 
@@ -451,10 +451,10 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			ftStatus = FT_Read(ftHandle, byInputBuffer, dwNumBytesToRead,
 					&dwNumBytesRead);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
-				delete tdiBytes;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
+				delete[] tdiBytes;
 				return false;
 			}
 
@@ -471,7 +471,7 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			}
 		}
 
-		delete tdiBytes;
+		delete[] tdiBytes;
 	}
 
 	if (read) {
@@ -486,17 +486,17 @@ bool Jtag::shiftData(unsigned int bitCount, string tdi, string tdo,
 			cerr << "TDO didn't match expected string. Got " << hexTdo
 					<< " expected " << tdo << " with mask " << mask << endl;
 
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return false;
 
 		}
 	}
 
-	delete byOutputBuffer;
-	delete tdoBuffer;
-	delete byInputBuffer;
+	delete[] byOutputBuffer;
+	delete[] tdoBuffer;
+	delete[] byInputBuffer;
 	return true;
 }
 
@@ -526,9 +526,9 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 		byOutputBuffer[2] = data & 0xff;
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return "";
 		}
 
@@ -539,9 +539,9 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 		byOutputBuffer[2] = 0x03 | (lastBit << 7);
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return "";
 		}
 
@@ -553,9 +553,9 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 		ftStatus = FT_Read(ftHandle, byInputBuffer, dwNumBytesToRead,
 				&dwNumBytesRead);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
 			return "";
 		}
 
@@ -588,10 +588,10 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 			ftStatus = FT_Write(ftHandle, byOutputBuffer, 3 + bct,
 					&dwNumBytesSent);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
-				delete tdiBytes;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
+				delete[] tdiBytes;
 				return "";
 			}
 
@@ -607,10 +607,10 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 			byOutputBuffer[2] = tdiBytes[reqBytes - 1] & 0xff;
 			ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 			if (ftStatus != FT_OK) {
-				delete byOutputBuffer;
-				delete tdoBuffer;
-				delete byInputBuffer;
-				delete tdiBytes;
+				delete[] byOutputBuffer;
+				delete[] tdoBuffer;
+				delete[] byInputBuffer;
+				delete[] tdiBytes;
 				return "";
 			}
 		}
@@ -622,10 +622,10 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 		byOutputBuffer[2] = 0x03 | (lastBit << 7);
 		ftStatus = FT_Write(ftHandle, byOutputBuffer, 3, &dwNumBytesSent);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
-			delete tdiBytes;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
+			delete[] tdiBytes;
 			return "";
 		}
 
@@ -639,10 +639,10 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 		ftStatus = FT_Read(ftHandle, byInputBuffer, dwNumBytesToRead,
 				&dwNumBytesRead);
 		if (ftStatus != FT_OK) {
-			delete byOutputBuffer;
-			delete tdoBuffer;
-			delete byInputBuffer;
-			delete tdiBytes;
+			delete[] byOutputBuffer;
+			delete[] tdoBuffer;
+			delete[] byInputBuffer;
+			delete[] tdiBytes;
 			return "";
 		}
 
@@ -657,7 +657,7 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 			tdoBuffer[tdoBytes++] = byInputBuffer[dwNumBytesRead - 1] >> 7;
 		}
 
-		delete tdiBytes;
+		delete[] tdiBytes;
 	}
 
 	//Read out the data from input buffer
@@ -668,9 +668,9 @@ string Jtag::shiftData(unsigned int bitCount, string tdi) {
 	if (hexTdo.length() - 1 == tdi.length())
 		hexTdo = hexTdo.substr(1, hexTdo.length() - 1);
 
-	delete byOutputBuffer;
-	delete tdoBuffer;
-	delete byInputBuffer;
+	delete[] byOutputBuffer;
+	delete[] tdoBuffer;
+	delete[] byInputBuffer;
 	return hexTdo;
 }
 
